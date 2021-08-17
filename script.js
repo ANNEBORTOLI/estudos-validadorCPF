@@ -1,13 +1,10 @@
 function validaCPF(cpf) {
-  if (cpf.length != 11){
+  if (cpf == null || cpf.length != 11){
     return false;
   } else {
     var numeros = cpf.substring(0, 9);
     var digitos = cpf.substring(9);
-
-    console.log('numeros do cpf ' + numeros)
-    console.log('digitos do cpf ' + digitos)
-
+    
     var soma = 0;
     for(var i = 10; i > 1; i--){
       soma += numeros.charAt(10 - i) * i;
@@ -36,15 +33,34 @@ function validaCPF(cpf) {
   }
 }
 
+function extraiCPF(input){
+  //RegExp do CPF com e sem pontuação
+  const regex1 = new RegExp('[0-9]{11}'); 
+  const regex2 = new RegExp('[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}');
+
+  const teste1 = input.match(regex1);
+  const teste2 = input.match(regex2);
+
+  if (teste1) {
+    return teste1[0];
+  } 
+  if (teste2){
+    return teste2[0].replace(/[^0-9]/g, '');
+  }
+  return null
+}
+
 function validacao() {
-  console.log('Iniciando validacao de CPF');
   document.getElementById('success').style.display = 'none';
   document.getElementById('error').style.display = 'none';
 
-  var cpf = document.getElementById('cpf_digitado').value;
-  
-  var resultadoValidacao= validaCPF(cpf);
+  //Trata o input recebido pelo Usuário
+  const inputValue = document.getElementById('cpf_digitado').value;
+  const cpf = extraiCPF(inputValue); 
 
+  // Valida o CPF recebido
+  const resultadoValidacao= validaCPF(cpf);
+ 
   if(resultadoValidacao) {
     document.getElementById('success').style.display = 'block';
   } else {
